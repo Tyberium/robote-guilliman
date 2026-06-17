@@ -1,0 +1,132 @@
+"""FastAPI service for Cloud Run - Ro-boto-guilliman rules arbiter."""
+
+from __future__ import annotations
+
+import logging
+from contextlib import asynccontextmanager
+from typing import Annotated
+
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException
+from pydantic import BaseModel, Field
+
+from ro_boto_guilliman.config import Settings, get_settings
+from ro_boto_guilliman.gemini_client import GeminiArbiter
+from ro_boto_guilliman.prompts import RetrievedChunk
+from ro_boto_guilliman.retriever import ChatHistoryCache, RulesRetriever
+
+logger = logging.getLogger(__name__)
+
+
+class AskRequest(BaseModel):
+    query: str = Field(..., min_length=3, max_length=4000)
+    use_cache: bool = True
+
+
+class ContextChunkResponse(BaseModel):
+    page: int | None
+    section_hint: str | None
+    source: str | None
+    preview: str
+
+
+class AskResponse(BaseModel):
+    answer: str
+    cached: bool
+    context_chunks: list[ContextChunkResponse]
+
+
+class AppState:
+    def __init__(self, settings: Settings) -> None:
+        self.settings = settings
+        self.retriever = RulesRetriever(settings)
+        self.cache = ChatHistoryCache(settings)
+        self.arbiter = GeminiArbiter(settings)
+
+
+def _chunk_preview(chunk: RetrievedChunk, limit: int = 180) -> str:
+    text = chunk.text.strip().replace("\n", " ")
+    if len(text) <= limit:
+        return text
+    return text[: limit - 3] + "..."
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = get_settings()
+    app.state.ro_boto = AppState(settings)
+    logging.basicConfig(level=settings.log_level.upper())
+    logger.info(
+        "Ro-boto-guilliman online (project=%s, collection=%s)",
+        settings.gcp_project_id,
+        settings.firestore_collection,
+    )
+    yield
+
+
+app = FastAPI(
+    title="Ro-boto-guilliman",
+    description="Warhammer 11th edition rules arbiter for battleplan.uk",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+
+def get_state() -> AppState:
+    return app.state.ro_boto
+
+
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "ok", "service": "ro-boto-guilliman"}
+
+
+@app.post("/v1/ask", response_model=AskResponse)
+def ask_rules(
+    body: AskRequest,
+    state: Annotated[AppState, Depends(get_state)],
+) -> AskResponse:
+    query = body.query.strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Query must not be empty.")
+
+    cached_answer: str | None = None
+    if body.use_cache:
+        cached_answer = state.cache.get(query)
+
+    if cached_answer:
+        return AskResponse(answer=cached_answer, cached=True, context_chunks=[])
+
+    chunks = state.retriever.retrieve(query)
+    answer = state.arbiter.answer(query, chunks)
+
+    if body.use_cache:
+        state.cache.put(query, answer)
+
+    return AskResponse(
+        answer=answer,
+        cached=False,
+        context_chunks=[
+            ContextChunkResponse(
+                page=chunk.page,
+                section_hint=chunk.section_hint,
+                source=chunk.source,
+                preview=_chunk_preview(chunk),
+            )
+            for chunk in chunks
+        ],
+    )
+
+
+def run() -> None:
+    settings = get_settings()
+    uvicorn.run(
+        "ro_boto_guilliman.api.main:app",
+        host="0.0.0.0",
+        port=settings.port,
+        log_level=settings.log_level.lower(),
+    )
+
+
+if __name__ == "__main__":
+    run()

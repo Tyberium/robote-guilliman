@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env and secrets
+.env
+.env.local
+*.pdf
+credentials.json
+service-account*.json
+
+# Pulumi
+infra/pulumi/venv/
+
+# IDE
+.idea/
+.vscode/

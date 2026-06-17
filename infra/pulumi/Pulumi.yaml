@@ -1,0 +1,6 @@
+name: ro-boto-guilliman
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: GCP infrastructure for Ro-boto-guilliman (Cloud Run, IAM, Firestore index)
