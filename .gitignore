@@ -18,6 +18,7 @@ credentials.json
 service-account*.json
 
 # Pulumi
+infra/pulumi/.venv/
 infra/pulumi/venv/
 
 # IDE

@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "ro-boto-guilliman-infra"
+version = "0.1.0"
+description = "Pulumi infrastructure for Ro-boto-guilliman"
+authors = ["tyberium <tyberium@gmx.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pulumi = "^3.140.0"
+pulumi-gcp = "^8.10.0"
+
+[build-system]
+requires = ["poetry>=1.8"]
+build-backend = "poetry.core.masonry.api"

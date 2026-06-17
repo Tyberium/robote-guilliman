@@ -101,8 +101,7 @@ Alternative: use `GCP_SA_KEY` (JSON) with `credentials_json` in the auth step if
 
 ```bash
 cd infra/pulumi
-python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+poetry install
 pulumi stack select dev
 pulumi preview
 ```
