@@ -10,7 +10,7 @@ env:
   GCP_PROJECT_ID: roboto-guilliman
   GCP_REGION: us-central1
   ARTIFACT_REGISTRY: us-central1-docker.pkg.dev/roboto-guilliman/roboto-guilliman
-  PULUMI_STACK: dev
+  PULUMI_STACK: main
   PLACEHOLDER_IMAGE: us-docker.pkg.dev/cloudrun/container/hello
 
 jobs:

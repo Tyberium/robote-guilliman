@@ -102,7 +102,7 @@ Alternative: use `GCP_SA_KEY` (JSON) with `credentials_json` in the auth step if
 ```bash
 cd infra/pulumi
 poetry install
-pulumi stack select dev
+pulumi stack select main
 pulumi preview
 ```
 
@@ -110,6 +110,7 @@ Production deploys should go through CI, not local `pulumi up`.
 
 ## Design notes
 
+- **Single environment** - one GCP project and one Pulumi `main` stack; no dev/stage split (see [docs/free_tier_and_security.md](docs/free_tier_and_security.md)).
 - **All Python** for app code; **Pulumi Python** for infra (matches ingestion/API stack).
 - **Free tier first** - no global HTTPS LB or IAP; Firebase token auth at the app layer instead.
 - **Embeddings stored as `Vector(...)`** - required for Firestore vector indexes.

@@ -34,6 +34,18 @@ This gives you auth comparable to IAP for club use, at zero LB cost.
 
 Optional hardening later: App Check, rate limiting via Firestore counters, or Cloud Armor if traffic grows.
 
+## Single environment (no dev/stage)
+
+roboto-guilliman uses **one GCP project** (`roboto-guilliman`) and **one Pulumi stack** (`main`). There is no separate dev, stage, or prod infrastructure.
+
+**Why:**
+
+- **Cost** - A second GCP project doubles WIF setup, secrets, billing alerts, and Artifact Registry overhead for little benefit on a scale-to-zero service.
+- **Safety net** - Pull requests run ruff and pytest before merge; deploy only runs on push to `main`. Rollback is a git revert and redeploy (images tagged by git SHA).
+- **Mission profile** - This is a club rules arbiter, not a payment or identity system. Brief downtime or a bad deploy is annoying, not catastrophic.
+
+If traffic or stakes grow later (paid tiers, public SLA), add a staging project then - not before there is a concrete need.
+
 ## Pulumi stack (`infra/pulumi`)
 
 Creates:
@@ -43,7 +55,7 @@ Creates:
 - Firestore vector index on `warhammer_rules_11th.embedding`
 - Cloud Run v2 service
 
-Stack config lives in `Pulumi.dev.yaml`. The container image URI is set by CI on each deploy.
+Stack config lives in `Pulumi.main.yaml`. The container image URI is set by CI on each deploy.
 
 ## GitHub Actions secrets
 

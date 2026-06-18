@@ -17,7 +17,7 @@
 | `text-embedding-004` | ✅ Wired | Separate task types for doc/query |
 | Recursive chunker | ✅ Tested | Paragraph-aware, ALL-CAPS section hint detection |
 | Ingest CLI | ✅ Working | `poetry run ingest-rules`, batch commits to Firestore |
-| Pulumi IaC | ✅ CI-managed | Python, dev stack, Artifact Registry + Cloud Run |
+| Pulumi IaC | ✅ CI-managed | Python, `main` stack, Artifact Registry + Cloud Run |
 | GitHub Actions CI | ✅ Passing | ruff → pytest → Docker build → `pulumi up` → smoke test |
 
 ### Gaps (the entire roadmap targets these)
@@ -152,7 +152,7 @@ PRs run `quality` only (no deploy, no eval).
    - Create Workload Identity Federation pool for GitHub Actions (keyless auth)
    - Create deployer service account with: `roles/run.admin`, `roles/artifactregistry.writer`, `roles/datastore.user`, `roles/aiplatform.user`, `roles/secretmanager.admin`, `roles/iam.serviceAccountUser`
    - Update `.github/workflows/ci.yml` env vars: `GCP_PROJECT_ID: roboto-guilliman`
-   - Update `Pulumi.dev.yaml`: `gcp:project: roboto-guilliman`
+   - Update `Pulumi.main.yaml`: `gcp:project: roboto-guilliman`
    - Update `config.py` default: `gcp_project_id: str = "roboto-guilliman"`
    - Update `.env.example`: `GCP_PROJECT_ID=roboto-guilliman`
    - Update GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`
