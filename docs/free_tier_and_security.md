@@ -9,7 +9,7 @@ All infrastructure is Pulumi; all deploys run through GitHub Actions on push to 
 |---------|--------------------------|-------------|
 | Cloud Run | 2M requests/mo, 180k vCPU-s, 360k GiB-s | `min-instances=0`, `max-instances=2`, `256Mi`, `cpu_idle=true` |
 | Artifact Registry | 0.5 GB storage | Single service repo, tagged by git SHA |
-| Firestore | Spark: 1 GiB, 50k reads / 20k writes per day | Shared `battleplan-dev-2024` project; vector index uses native Firestore (no extra nodes) |
+| Firestore | Spark: 1 GiB, 50k reads / 20k writes per day | Shared `roboto-guilliman` project; vector index uses native Firestore (no extra nodes) |
 | Vertex AI (Gemini Flash-Lite) | Pay-per-token, very low cost | Cache hits skip the LLM entirely |
 | Vertex AI (embeddings) | Ingest is one-off; queries are small | `text-embedding-004` at query time only |
 | GitHub Actions | 2,000 min/mo (private repo) | Test + deploy ~5-8 min per push |

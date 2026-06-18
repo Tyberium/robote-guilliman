@@ -48,7 +48,7 @@ Authenticate to GCP (Application Default Credentials):
 
 ```bash
 gcloud auth application-default login
-gcloud config set project battleplan-dev-2024
+gcloud config set project roboto-guilliman
 ```
 
 ### Ingest a rules PDF

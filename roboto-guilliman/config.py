@@ -12,7 +12,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    gcp_project_id: str = "battleplan-dev-2024"
+    gcp_project_id: str = "roboto-guilliman"
     gcp_location: str = "us-central1"
 
     firestore_collection: str = "warhammer_rules_11th"

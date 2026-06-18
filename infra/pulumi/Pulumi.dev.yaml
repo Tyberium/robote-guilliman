@@ -1,5 +1,5 @@
 config:
-  gcp:project: battleplan-dev-2024
+  gcp:project: roboto-guilliman
   gcp:region: us-central1
   roboto-guilliman:serviceName: roboto-guilliman
   roboto-guilliman:firestoreCollection: warhammer_rules_11th
