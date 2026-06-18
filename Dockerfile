@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir "poetry==${POETRY_VERSION}"
 COPY pyproject.toml poetry.lock* ./
 RUN poetry install --no-interaction --no-ansi --only main
 
-COPY ro_boto_guilliman ./ro_boto_guilliman
+COPY roboto_guilliman ./roboto_guilliman
 
 EXPOSE 8080
 CMD ["poetry", "run", "serve"]

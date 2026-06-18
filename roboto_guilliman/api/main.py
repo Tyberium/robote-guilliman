@@ -10,10 +10,10 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from ro_boto_guilliman.config import Settings, get_settings
-from ro_boto_guilliman.gemini_client import GeminiArbiter
-from ro_boto_guilliman.prompts import RetrievedChunk
-from ro_boto_guilliman.retriever import ChatHistoryCache, RulesRetriever
+from roboto_guilliman.config import Settings, get_settings
+from roboto_guilliman.gemini_client import GeminiArbiter
+from roboto_guilliman.prompts import RetrievedChunk
+from roboto_guilliman.retriever import ChatHistoryCache, RulesRetriever
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ def ask_rules(
 def run() -> None:
     settings = get_settings()
     uvicorn.run(
-        "ro_boto_guilliman.api.main:app",
+        "roboto_guilliman.api.main:app",
         host="0.0.0.0",
         port=settings.port,
         log_level=settings.log_level.lower(),

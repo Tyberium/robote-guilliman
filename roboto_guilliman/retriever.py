@@ -10,9 +10,9 @@ from google.cloud import firestore
 from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
 from google.cloud.firestore_v1.vector import Vector
 
-from ro_boto_guilliman.config import Settings, get_settings
-from ro_boto_guilliman.embeddings import EmbeddingService
-from ro_boto_guilliman.prompts import RetrievedChunk, build_cache_key
+from roboto_guilliman.config import Settings, get_settings
+from roboto_guilliman.embeddings import EmbeddingService
+from roboto_guilliman.prompts import RetrievedChunk, build_cache_key
 
 logger = logging.getLogger(__name__)
 

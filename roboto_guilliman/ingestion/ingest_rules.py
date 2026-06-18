@@ -11,9 +11,9 @@ import fitz
 from google.cloud import firestore
 from google.cloud.firestore_v1.vector import Vector
 
-from ro_boto_guilliman.chunking import TextChunk, chunk_page_text
-from ro_boto_guilliman.config import Settings, get_settings
-from ro_boto_guilliman.embeddings import EmbeddingService
+from roboto_guilliman.chunking import TextChunk, chunk_page_text
+from roboto_guilliman.config import Settings, get_settings
+from roboto_guilliman.embeddings import EmbeddingService
 
 logger = logging.getLogger(__name__)
 

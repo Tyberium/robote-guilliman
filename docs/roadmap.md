@@ -107,8 +107,8 @@ Every merge to `main` runs this pipeline in order. Gates are enforced - a failed
 ┌─────────────────────────────────────────────────────────────────┐
 │ Job: quality                                                    │
 │  ruff check + format check                                      │
-│  mypy --strict ro_boto_guilliman                                │
-│  pytest -q --cov=ro_boto_guilliman --cov-fail-under=80         │
+│  mypy --strict roboto_guilliman                                │
+│  pytest -q --cov=roboto_guilliman --cov-fail-under=80         │
 └──────────────────────────┬──────────────────────────────────────┘
                            │ passes
 ┌──────────────────────────▼──────────────────────────────────────┐
@@ -158,7 +158,7 @@ PRs run `quality` only (no deploy, no eval).
    - Update GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`
    - Set a GCP billing budget alert at $5/mo (Twilio ~$1 + buffer for Vertex AI)
 
-1. **Firebase auth middleware** (`ro_boto_guilliman/api/auth.py`)
+1. **Firebase auth middleware** (`roboto_guilliman/api/auth.py`)
    - FastAPI dependency that extracts `Authorization: Bearer <id_token>`
    - Verifies with `firebase-admin` SDK (`verify_id_token`)
    - Returns decoded `uid` and `email` for downstream logging
@@ -175,14 +175,14 @@ PRs run `quality` only (no deploy, no eval).
 
 4. **CI quality job update** (`.github/workflows/ci.yml`)
    - Split `test` job into `quality` (lint + mypy + pytest + coverage)
-   - Coverage: `pytest --cov=ro_boto_guilliman --cov-fail-under=80`
+   - Coverage: `pytest --cov=roboto_guilliman --cov-fail-under=80`
 
 5. **CORS configuration**
    - Allow `https://battleplan.uk` and `http://localhost:*` only
    - Use `fastapi.middleware.cors.CORSMiddleware`
 
 **New files:**
-- `ro_boto_guilliman/api/auth.py`
+- `roboto_guilliman/api/auth.py`
 - `tests/test_auth.py` (mock Firebase token verification)
 
 ---
@@ -228,7 +228,7 @@ WhatsApp reply to sender / group
 
 **Implementation tasks:**
 
-1. **WhatsApp router** (`ro_boto_guilliman/api/whatsapp.py`)
+1. **WhatsApp router** (`roboto_guilliman/api/whatsapp.py`)
    - `POST /webhook/whatsapp` - accepts Twilio form-encoded body
    - Twilio signature validation using `twilio.request_validator.RequestValidator`
    - Parse `Body`, `From`, `To`, `NumMedia` fields
@@ -238,18 +238,18 @@ WhatsApp reply to sender / group
    - Reject non-text messages gracefully ("I can only answer text questions, try: @roboto what happens when a unit fails a Battle-shock test?")
    - Add `twilio` to `pyproject.toml`
 
-2. **Rate limiter** (`ro_boto_guilliman/rate_limiter.py`)
+2. **Rate limiter** (`roboto_guilliman/rate_limiter.py`)
    - Firestore document per `From` number, TTL-style counter with `window_start`
    - `RateLimiter.check(phone: str) -> bool`
    - 10 requests per 60-second window (configurable via settings)
 
-3. **WhatsApp formatter** (`ro_boto_guilliman/api/whatsapp_formatter.py`)
+3. **WhatsApp formatter** (`roboto_guilliman/api/whatsapp_formatter.py`)
    - Convert Markdown bold (`**term**`) → `*term*` (WhatsApp bold)
    - Convert headers to uppercase plain text
    - Truncate to 1600 chars with "..." if answer is very long
    - Add citation footer: `📖 Source: {source} p.{page}`
 
-4. **Settings additions** (`ro_boto_guilliman/config.py`)
+4. **Settings additions** (`roboto_guilliman/config.py`)
    - `twilio_account_sid: str`
    - `twilio_auth_token: str`
    - `rate_limit_requests: int = 10`
@@ -268,9 +268,9 @@ WhatsApp reply to sender / group
    - Test message parsing, rate limit enforcement, formatter output
 
 **New files:**
-- `ro_boto_guilliman/api/whatsapp.py`
-- `ro_boto_guilliman/rate_limiter.py`
-- `ro_boto_guilliman/api/whatsapp_formatter.py`
+- `roboto_guilliman/api/whatsapp.py`
+- `roboto_guilliman/rate_limiter.py`
+- `roboto_guilliman/api/whatsapp_formatter.py`
 - `tests/test_whatsapp.py`
 - `tests/test_rate_limiter.py`
 
@@ -338,7 +338,7 @@ Firestore + Vertex AI  (roboto-guilliman project, fully isolated)
    - Phase 3 relaxes this: Cloud Run's IAM layer handles OIDC from battleplan; Firebase ID tokens still accepted for any future direct callers
    - In practice: Cloud Run `--no-allow-unauthenticated` + IAM invoker grants replaces the app-layer Firebase check for server-to-server calls
 
-4. **OpenAPI documentation polish** (`ro_boto_guilliman/api/main.py`)
+4. **OpenAPI documentation polish** (`roboto_guilliman/api/main.py`)
    - Add `tags`, `summary`, `description`, `response_description` to all endpoints
    - `/docs` is already public - this becomes the integration reference for Battleplan developers
    - Add example request/response bodies using Pydantic `model_config`
@@ -368,19 +368,19 @@ Firestore + Vertex AI  (roboto-guilliman project, fully isolated)
 
 **Implementation tasks:**
 
-1. **Structured page extractor** (`ro_boto_guilliman/ingestion/page_parser.py`)
+1. **Structured page extractor** (`roboto_guilliman/ingestion/page_parser.py`)
    - Use `page.get_text("dict")` to get blocks with `type` (`0`=text, `1`=image)
    - Detect table-like blocks: lines with consistent x-coordinates
    - Convert table blocks to GitHub-flavoured Markdown tables
    - Preserve parent-child structure: weapon profile rows linked to unit name header
    - Output: `ParsedPage(text_blocks: list[Block], tables: list[MarkdownTable], section: str | None)`
 
-2. **Enhanced TextChunk** (`ro_boto_guilliman/chunking.py`)
+2. **Enhanced TextChunk** (`roboto_guilliman/chunking.py`)
    - Add `chunk_type: Literal["text", "table", "datasheet"]` field
    - Add `parent_section: str | None` (e.g. unit name for weapon profile rows)
    - Add `faction: str | None` (extracted from section context)
 
-3. **Update ingest pipeline** (`ro_boto_guilliman/ingestion/ingest_rules.py`)
+3. **Update ingest pipeline** (`roboto_guilliman/ingestion/ingest_rules.py`)
    - Replace `page.get_text("text")` with `page_parser.extract_page`
    - Store `chunk_type`, `parent_section`, `faction` in Firestore documents
    - Dry-run now logs structured output for inspection
@@ -393,13 +393,13 @@ Firestore + Vertex AI  (roboto-guilliman project, fully isolated)
 
 **Implementation tasks:**
 
-1. **BM25 index** (`ro_boto_guilliman/bm25_index.py`)
+1. **BM25 index** (`roboto_guilliman/bm25_index.py`)
    - `BM25Index`: loads all `text` values from Firestore at startup, builds `rank_bm25.BM25Okapi`
    - Lazy-loads on first query, cached in `AppState`
    - `search(query: str, top_k: int) -> list[str]` returns doc IDs
    - Refresh on startup only (acceptable for a rules corpus that changes rarely)
 
-2. **Hybrid retriever** (`ro_boto_guilliman/retriever.py`)
+2. **Hybrid retriever** (`roboto_guilliman/retriever.py`)
    - `HybridRetriever` replaces `RulesRetriever`
    - Runs vector search and BM25 search in parallel (`asyncio.gather`)
    - Merges via RRF: `score = 1/(k + rank_vector) + 1/(k + rank_bm25)`, `k=60`

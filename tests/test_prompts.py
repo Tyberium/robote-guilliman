@@ -1,6 +1,6 @@
 """Tests for prompt formatting."""
 
-from ro_boto_guilliman.prompts import RetrievedChunk, build_cache_key, build_user_prompt, format_context
+from roboto_guilliman.prompts import RetrievedChunk, build_cache_key, build_user_prompt, format_context
 
 
 def test_format_context_includes_citation():

@@ -5,7 +5,7 @@ from __future__ import annotations
 from google import genai
 from google.genai import types
 
-from ro_boto_guilliman.config import Settings, get_settings
+from roboto_guilliman.config import Settings, get_settings
 
 
 class EmbeddingService:

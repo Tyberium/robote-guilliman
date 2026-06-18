@@ -5,8 +5,8 @@ from __future__ import annotations
 from google import genai
 from google.genai import types
 
-from ro_boto_guilliman.config import Settings, get_settings
-from ro_boto_guilliman.prompts import SYSTEM_PERSONA, RetrievedChunk, build_user_prompt
+from roboto_guilliman.config import Settings, get_settings
+from roboto_guilliman.prompts import SYSTEM_PERSONA, RetrievedChunk, build_user_prompt
 
 
 class GeminiArbiter:

@@ -45,7 +45,7 @@ jobs:
         run: poetry install --no-interaction
 
       - name: Ruff
-        run: poetry run ruff check ro_boto_guilliman tests
+        run: poetry run ruff check roboto_guilliman tests
 
       - name: Pytest
         run: poetry run pytest -q

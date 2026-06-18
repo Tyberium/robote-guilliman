@@ -1,6 +1,6 @@
 """Tests for recursive chunking."""
 
-from ro_boto_guilliman.chunking import chunk_page_text, recursive_split
+from roboto_guilliman.chunking import chunk_page_text, recursive_split
 
 
 def test_recursive_split_respects_chunk_size():

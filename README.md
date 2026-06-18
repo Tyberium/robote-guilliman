@@ -27,7 +27,7 @@ See [docs/free_tier_and_security.md](docs/free_tier_and_security.md) for cost an
 
 ```
 roboto-guilliman/
-  ro_boto_guilliman/
+  roboto_guilliman/
     api/           # FastAPI Cloud Run service
     ingestion/     # PDF parse + Firestore ingest
   infra/pulumi/    # Pulumi stack (Cloud Run, IAM, vector index, Artifact Registry)
