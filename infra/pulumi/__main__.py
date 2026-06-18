@@ -26,14 +26,14 @@ artifact_repo = gcp.artifactregistry.Repository(
     repository_id=service_name,
     location=region,
     format="DOCKER",
-    description="robote-guilliman container images",
+    description="roboto-guilliman container images",
     labels=labels,
 )
 
 runtime_sa = gcp.serviceaccount.Account(
     "runtime",
     account_id=service_name,
-    display_name="robote-guilliman Cloud Run runtime",
+    display_name="roboto-guilliman Cloud Run runtime",
 )
 
 gcp.projects.IAMMember(

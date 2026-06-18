@@ -1,5 +1,5 @@
 """
-robote-guilliman: A precise and unflappable Warhammer 11th Edition Rules Arbiter.
+roboto-guilliman: A precise and unflappable Warhammer 11th Edition Rules Arbiter.
 Combines exact regex-based rulebook parsing, deterministic caching, 
 vector retrieval via Google Cloud Firestore, and a FastAPI webhook for WhatsApp.
 
@@ -54,7 +54,7 @@ def get_settings() -> Settings:
 # 2. System Personas & Prompt Engineering Templates
 # =====================================================================
 
-SYSTEM_PERSONA = """You are robote-guilliman, a precise and unflappable Warhammer rules arbiter.
+SYSTEM_PERSONA = """You are roboto-guilliman, a precise and unflappable Warhammer rules arbiter.
 Your goal is to answer queries based strictly on the provided rules chunks.
 
 Rules of engagement:
@@ -291,7 +291,7 @@ def call_llm_service(system_prompt: str, user_prompt: str) -> str:
 # 7. Gateway Webhook Server API (FastAPI + Twilio WhatsApp)
 # =====================================================================
 
-app = FastAPI(title="robote-guilliman WhatsApp API Gateway")
+app = FastAPI(title="roboto-guilliman WhatsApp API Gateway")
 
 # Instantiate stateless dependencies globally
 retriever = RulesRetriever()

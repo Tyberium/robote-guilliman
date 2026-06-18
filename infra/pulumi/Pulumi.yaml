@@ -1,6 +1,6 @@
-name: robote-guilliman
+name: roboto-guilliman
 runtime:
   name: python
   options:
     toolchain: poetry
-description: GCP infrastructure for robote-guilliman (Cloud Run, IAM, Firestore index)
+description: GCP infrastructure for roboto-guilliman (Cloud Run, IAM, Firestore index)

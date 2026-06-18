@@ -1,11 +1,11 @@
-"""System prompts and context formatting for robote-guilliman."""
+"""System prompts and context formatting for roboto-guilliman."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 
-SYSTEM_PERSONA = """You are robote-guilliman, a precise and unflappable Warhammer rules arbiter.
+SYSTEM_PERSONA = """You are roboto-guilliman, a precise and unflappable Warhammer rules arbiter.
 Your goal is to answer queries based strictly on the provided rules chunks.
 
 Rules of engagement:
