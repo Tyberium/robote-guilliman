@@ -10,9 +10,10 @@ WORKDIR /app
 RUN pip install --no-cache-dir "poetry==${POETRY_VERSION}"
 
 COPY pyproject.toml poetry.lock* ./
-RUN poetry install --no-interaction --no-ansi --only main
+RUN poetry install --no-interaction --no-ansi --only main --no-root
 
 COPY roboto_guilliman ./roboto_guilliman
+RUN poetry install --no-interaction --no-ansi --only main
 
 EXPOSE 8080
 CMD ["poetry", "run", "serve"]
