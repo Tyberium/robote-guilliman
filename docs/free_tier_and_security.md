@@ -1,6 +1,6 @@
 # Free tier and security
 
-Ro-boto-guilliman is designed to stay inside GCP's free allowances where possible.
+robote-guilliman is designed to stay inside GCP's free allowances where possible.
 All infrastructure is Pulumi; all deploys run through GitHub Actions on push to `main`.
 
 ## Free tier budget

@@ -9,7 +9,7 @@ on:
 env:
   GCP_PROJECT_ID: battleplan-dev-2024
   GCP_REGION: us-central1
-  ARTIFACT_REGISTRY: us-central1-docker.pkg.dev/battleplan-dev-2024/ro-boto-guilliman
+  ARTIFACT_REGISTRY: us-central1-docker.pkg.dev/battleplan-dev-2024/robote-guilliman
   PULUMI_STACK: dev
   PLACEHOLDER_IMAGE: us-docker.pkg.dev/cloudrun/container/hello
 

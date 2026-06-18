@@ -1,9 +1,9 @@
 config:
   gcp:project: battleplan-dev-2024
   gcp:region: us-central1
-  ro-boto-guilliman:serviceName: ro-boto-guilliman
-  ro-boto-guilliman:firestoreCollection: warhammer_rules_11th
-  ro-boto-guilliman:maxInstances: "2"
-  ro-boto-guilliman:memory: 256Mi
+  robote-guilliman:serviceName: robote-guilliman
+  robote-guilliman:firestoreCollection: warhammer_rules_11th
+  robote-guilliman:maxInstances: "2"
+  robote-guilliman:memory: 256Mi
   # Set by GitHub Actions on deploy: pulumi config set image <uri>
-  ro-boto-guilliman:image: placeholder
+  robote-guilliman:image: placeholder

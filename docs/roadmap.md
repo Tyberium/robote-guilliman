@@ -1,4 +1,4 @@
-# Ro-boto-guilliman - Strategic Roadmap & Implementation Phases
+# robote-guilliman - Strategic Roadmap & Implementation Phases
 
 > **Governing principles:** Everything ships through CI. Near-zero cost (GCP free tiers + Twilio at ~$1/mo). Every feature is a portfolio demonstration.
 
@@ -48,7 +48,7 @@
                                        │ deploys
                        ┌───────────────▼─────────────────────────┐
                        │         Cloud Run (free tier)            │
-                       │         ro-boto-guilliman API            │
+                       │         robote-guilliman API            │
                        │                                          │
                        │  POST /v1/ask          (Firebase auth)  │
                        │  POST /webhook/whatsapp (Twilio HMAC)   │
@@ -147,14 +147,14 @@ PRs run `quality` only (no deploy, no eval).
 **Implementation tasks:**
 
 0. **New GCP project setup** (one-time, outside CI - prerequisite for everything)
-   - Create project `ro-boto-guilliman` in GCP console
+   - Create project `robote-guilliman` in GCP console
    - Enable APIs: Cloud Run, Artifact Registry, Firestore, Vertex AI, Secret Manager
    - Create Workload Identity Federation pool for GitHub Actions (keyless auth)
    - Create deployer service account with: `roles/run.admin`, `roles/artifactregistry.writer`, `roles/datastore.user`, `roles/aiplatform.user`, `roles/secretmanager.admin`, `roles/iam.serviceAccountUser`
-   - Update `.github/workflows/ci.yml` env vars: `GCP_PROJECT_ID: ro-boto-guilliman`
-   - Update `Pulumi.dev.yaml`: `gcp:project: ro-boto-guilliman`
-   - Update `config.py` default: `gcp_project_id: str = "ro-boto-guilliman"`
-   - Update `.env.example`: `GCP_PROJECT_ID=ro-boto-guilliman`
+   - Update `.github/workflows/ci.yml` env vars: `GCP_PROJECT_ID: robote-guilliman`
+   - Update `Pulumi.dev.yaml`: `gcp:project: robote-guilliman`
+   - Update `config.py` default: `gcp_project_id: str = "robote-guilliman"`
+   - Update `.env.example`: `GCP_PROJECT_ID=robote-guilliman`
    - Update GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`
    - Set a GCP billing budget alert at $5/mo (Twilio ~$1 + buffer for Vertex AI)
 
@@ -305,11 +305,11 @@ Firebase Cloud Function: callRulesArbiter (HTTPS callable)
       │  2. Fetches a short-lived OIDC token for its own service account
       │  3. Calls ro-boto with: Authorization: Bearer <OIDC token>
       ▼
-Cloud Run: POST /v1/ask  (ro-boto-guilliman project)
+Cloud Run: POST /v1/ask  (robote-guilliman project)
       │  Verifies Google-signed OIDC token against ro-boto's Cloud Run invoker IAM
       │  (GCP validates this natively - no Firebase SDK needed on ro-boto side)
       ▼
-Firestore + Vertex AI  (ro-boto-guilliman project, fully isolated)
+Firestore + Vertex AI  (robote-guilliman project, fully isolated)
 ```
 
 **Why service-to-service OIDC instead of forwarding the Firebase token:**
@@ -581,7 +581,7 @@ A phase is complete when:
 
 1. **WhatsApp group vs DM:** ✅ Decided. Bot is added to the group and responds **only when @mentioned** (`@roboto`). All other group traffic is silently ignored. DMs to the bot number also work (no mention needed in a 1:1 conversation). This is the correct UX - no noise, no accidental triggers.
 
-2. **Battleplan project separation:** ✅ Decided. Ro-boto-guilliman gets its own GCP project (`ro-boto-guilliman`) from day one. Battleplan billing spikes, IAM changes, and quota limits are fully isolated. Cross-project auth uses service-to-service OIDC (see Phase 3) rather than shared Firebase tokens.
+2. **Battleplan project separation:** ✅ Decided. robote-guilliman gets its own GCP project (`robote-guilliman`) from day one. Battleplan billing spikes, IAM changes, and quota limits are fully isolated. Cross-project auth uses service-to-service OIDC (see Phase 3) rather than shared Firebase tokens.
 
 3. **Twilio number:** Using a dedicated WhatsApp Business number via Twilio (~$1/mo) from day one. No sandbox, no join-code friction. The number is provisioned manually once; everything after that (webhook config, secret rotation) is CI-managed.
 

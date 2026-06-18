@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "ro-boto-guilliman-infra"
+name = "robote-guilliman-infra"
 version = "0.1.0"
-description = "Pulumi infrastructure for Ro-boto-guilliman"
+description = "Pulumi infrastructure for robote-guilliman"
 authors = ["tyberium <tyberium@gmx.com>"]
 package-mode = false
 

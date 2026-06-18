@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ro-boto-guilliman"
+name = "robote-guilliman"
 version = "0.1.0"
 description = "AI-powered Warhammer 11th edition rules arbiter for battleplan.uk"
 authors = ["tyberium <tyberium@gmx.com>"]

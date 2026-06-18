@@ -1,4 +1,4 @@
-"""FastAPI service for Cloud Run - Ro-boto-guilliman rules arbiter."""
+"""FastAPI service for Cloud Run - robote-guilliman rules arbiter."""
 
 from __future__ import annotations
 
@@ -57,7 +57,7 @@ async def lifespan(app: FastAPI):
     app.state.ro_boto = AppState(settings)
     logging.basicConfig(level=settings.log_level.upper())
     logger.info(
-        "Ro-boto-guilliman online (project=%s, collection=%s)",
+        "robote-guilliman online (project=%s, collection=%s)",
         settings.gcp_project_id,
         settings.firestore_collection,
     )
@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Ro-boto-guilliman",
+    title="robote-guilliman",
     description="Warhammer 11th edition rules arbiter for battleplan.uk",
     version="0.1.0",
     lifespan=lifespan,
@@ -78,7 +78,7 @@ def get_state() -> AppState:
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok", "service": "ro-boto-guilliman"}
+    return {"status": "ok", "service": "robote-guilliman"}
 
 
 @app.post("/v1/ask", response_model=AskResponse)

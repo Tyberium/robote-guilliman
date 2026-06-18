@@ -1,8 +1,8 @@
-# Ro-boto-guilliman
+# robote-guilliman
 
 AI-powered Warhammer **11th edition** rules arbiter for [battleplan.uk](https://battleplan.uk).
 
-Ro-boto-guilliman answers rules questions using retrieval-augmented generation (RAG) over
+robote-guilliman answers rules questions using retrieval-augmented generation (RAG) over
 ingested core rules PDFs. It cites page/section context, refuses to hallucinate when the
 index does not cover a interaction and caches repeat questions in Firestore.
 
@@ -26,7 +26,7 @@ See [docs/free_tier_and_security.md](docs/free_tier_and_security.md) for cost an
 ## Project layout
 
 ```
-ro-boto-guilliman/
+robote-guilliman/
   ro_boto_guilliman/
     api/           # FastAPI Cloud Run service
     ingestion/     # PDF parse + Firestore ingest
@@ -38,7 +38,7 @@ ro-boto-guilliman/
 ## Quick start (local)
 
 ```bash
-cd github/repositories/ro-boto-guilliman
+cd github/repositories/robote-guilliman
 cp .env.example .env
 poetry install
 poetry run pytest
