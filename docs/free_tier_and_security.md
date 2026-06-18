@@ -63,9 +63,26 @@ Stack config lives in `Pulumi.main.yaml`. The container image URI is set by CI o
 |--------|---------|
 | `PULUMI_ACCESS_TOKEN` | Pulumi Cloud (free tier) state backend |
 | `GCP_WORKLOAD_IDENTITY_PROVIDER` | WIF for keyless GCP auth from Actions |
-| `GCP_SERVICE_ACCOUNT` | Deployer SA email (needs Run Admin, AR Writer, SA User, Project IAM Admin for bindings) |
+| `GCP_SERVICE_ACCOUNT` | Deployer SA email - see deployer roles below |
 
 **Simpler alternative:** replace the WIF auth step with `credentials_json: ${{ secrets.GCP_SA_KEY }}` if you have not set up Workload Identity Federation yet.
+
+### Deployer service account roles (`github-actions-deploy`)
+
+Required for CI `pulumi up` on the `main` stack:
+
+| Role | Why |
+|------|-----|
+| `roles/run.admin` | Cloud Run service + IAM invoker binding |
+| `roles/artifactregistry.admin` | Create Docker repo (writer is push-only) |
+| `roles/datastore.user` | Runtime Firestore access |
+| `roles/datastore.indexAdmin` | Firestore vector index |
+| `roles/aiplatform.user` | Vertex AI (future runtime SA binding) |
+| `roles/secretmanager.admin` | Secrets (Twilio keys later) |
+| `roles/iam.serviceAccountUser` | Attach runtime SA to Cloud Run |
+| `roles/iam.serviceAccountAdmin` | Create runtime service account |
+| `roles/resourcemanager.projectIamAdmin` | Grant IAM to runtime SA |
+| `roles/compute.viewer` | Pulumi GCP provider region lookup |
 
 ## Cost monitoring
 

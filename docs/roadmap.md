@@ -150,7 +150,8 @@ PRs run `quality` only (no deploy, no eval).
    - Create project `roboto-guilliman` in GCP console
    - Enable APIs: Cloud Run, Artifact Registry, Firestore, Vertex AI, Secret Manager
    - Create Workload Identity Federation pool for GitHub Actions (keyless auth)
-   - Create deployer service account with: `roles/run.admin`, `roles/artifactregistry.writer`, `roles/datastore.user`, `roles/aiplatform.user`, `roles/secretmanager.admin`, `roles/iam.serviceAccountUser`
+   - Create deployer service account with:
+     - `roles/run.admin`, `roles/artifactregistry.admin`, `roles/datastore.user`, `roles/datastore.indexAdmin`, `roles/aiplatform.user`, `roles/secretmanager.admin`, `roles/iam.serviceAccountUser`, `roles/iam.serviceAccountAdmin`, `roles/resourcemanager.projectIamAdmin`, `roles/compute.viewer`
    - Update `.github/workflows/ci.yml` env vars: `GCP_PROJECT_ID: roboto-guilliman`
    - Update `Pulumi.main.yaml`: `gcp:project: roboto-guilliman`
    - Update `config.py` default: `gcp_project_id: str = "roboto-guilliman"`
