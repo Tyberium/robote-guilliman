@@ -86,7 +86,7 @@ cloud_run = gcp.cloudrunv2.Service(
         containers=[
             gcp.cloudrunv2.ServiceTemplateContainerArgs(
                 image=image,
-                ports=gcp.cloudrunv2.ServiceTemplateContainerPortArgs(container_port=8080),
+                ports=gcp.cloudrunv2.ServiceTemplateContainerPortsArgs(container_port=8080),
                 resources=gcp.cloudrunv2.ServiceTemplateContainerResourcesArgs(
                     limits={
                         "cpu": "1",
