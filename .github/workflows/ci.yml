@@ -108,6 +108,7 @@ jobs:
           if ! pulumi stack output cloud_run_uri >/dev/null 2>&1; then
             pulumi config set image "${{ env.PLACEHOLDER_IMAGE }}"
           fi
+          pulumi refresh --yes
           pulumi up --yes
 
       - name: Configure Docker for Artifact Registry

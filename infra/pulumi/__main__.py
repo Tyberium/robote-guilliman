@@ -76,6 +76,7 @@ cloud_run = gcp.cloudrunv2.Service(
     name=service_name,
     location=region,
     ingress="INGRESS_TRAFFIC_ALL",
+    deletion_protection=False,
     labels=labels,
     template=gcp.cloudrunv2.ServiceTemplateArgs(
         service_account=runtime_sa.email,
