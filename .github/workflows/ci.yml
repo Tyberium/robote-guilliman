@@ -21,7 +21,6 @@ env:
   GCP_REGION: europe-west1
   ARTIFACT_REGISTRY: europe-west1-docker.pkg.dev/roboto-guilliman/roboto-guilliman/api
   PULUMI_STACK: main
-  PLACEHOLDER_IMAGE: us-docker.pkg.dev/cloudrun/container/hello
 
 jobs:
   test:
@@ -115,9 +114,7 @@ jobs:
           pulumi stack select "${{ env.PULUMI_STACK }}" --create
           pulumi config set gcp:project "${{ env.GCP_PROJECT_ID }}"
           pulumi config set gcp:region "${{ env.GCP_REGION }}"
-          pulumi config set image "${{ env.PLACEHOLDER_IMAGE }}"
           pulumi refresh --yes
-          pulumi up --yes
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
