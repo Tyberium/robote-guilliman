@@ -105,9 +105,7 @@ jobs:
           pulumi stack select "${{ env.PULUMI_STACK }}" --create
           pulumi config set gcp:project "${{ env.GCP_PROJECT_ID }}"
           pulumi config set gcp:region "${{ env.GCP_REGION }}"
-          if ! pulumi stack output cloud_run_uri >/dev/null 2>&1; then
-            pulumi config set image "${{ env.PLACEHOLDER_IMAGE }}"
-          fi
+          pulumi config set image "${{ env.PLACEHOLDER_IMAGE }}"
           pulumi refresh --yes
           pulumi up --yes
 
