@@ -69,7 +69,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="roboto-guilliman",
     description="Warhammer 11th edition rules arbiter for battleplan.uk",
-    version="0.1.0",
+    version="1.0.0",
     lifespan=lifespan,
 )
 
