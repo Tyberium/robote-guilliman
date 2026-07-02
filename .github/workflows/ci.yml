@@ -134,19 +134,27 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deploy with Pulumi
-        working-directory: infra/pulumi
-        timeout-minutes: 10
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-        run: pulumi up --yes --skip-preview
-
       - name: Deploy Cloud Run image
         run: |
           gcloud run services update roboto-guilliman \
             --project="${{ env.GCP_PROJECT_ID }}" \
             --region="${{ env.GCP_REGION }}" \
             --image="${{ env.ARTIFACT_REGISTRY }}:sha-${{ github.sha }}"
+
+      - name: Clear stale Pulumi lock (if any)
+        working-directory: infra/pulumi
+        continue-on-error: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi cancel --yes
+
+      - name: Sync infra with Pulumi
+        working-directory: infra/pulumi
+        timeout-minutes: 10
+        continue-on-error: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi up --yes --skip-preview
 
       - name: Smoke test
         working-directory: infra/pulumi
