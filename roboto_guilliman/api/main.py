@@ -8,6 +8,7 @@ from typing import Annotated
 
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from roboto_guilliman.ask_pipeline import run_ask
@@ -73,6 +74,12 @@ app = FastAPI(
     description="Warhammer 11th edition rules arbiter for battleplan.uk",
     version="1.0.0",
     lifespan=lifespan,
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 app.include_router(whatsapp_router)
 

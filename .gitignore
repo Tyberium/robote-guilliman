@@ -27,3 +27,7 @@ infra/pulumi/venv/
 # IDE
 .idea/
 .vscode/
+
+# Presentation site
+presentation/node_modules/
+presentation/dist/
