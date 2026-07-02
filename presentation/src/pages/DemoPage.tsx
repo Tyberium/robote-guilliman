@@ -226,7 +226,14 @@ export default function DemoPage() {
         body: JSON.stringify({ query: queryText.trim() }),
       })
       if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${await res.text()}`)
+        let detail = await res.text()
+        try {
+          const parsed = JSON.parse(detail) as { detail?: string }
+          if (parsed.detail) detail = parsed.detail
+        } catch {
+          // keep raw body
+        }
+        throw new Error(`HTTP ${res.status}: ${detail}`)
       }
       const data: AskResponse = await res.json()
       setElapsed(Date.now() - start)
@@ -236,8 +243,8 @@ export default function DemoPage() {
       setError(msg)
       showNotification({
         title: 'Request failed',
-        message: msg.includes('CORS') || msg.includes('fetch')
-          ? 'CORS or network error. Ensure the API is deployed with CORS enabled.'
+        message: msg.includes('Failed to fetch') || msg.includes('NetworkError')
+          ? 'Network error reaching the API. If other sites work, the service may be cold-starting or returning an error without CORS headers — redeploy the API.'
           : msg,
         color: 'red',
       })

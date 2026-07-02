@@ -7,8 +7,10 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from google.genai.errors import ClientError
 from pydantic import BaseModel, Field
 
 from roboto_guilliman.ask_pipeline import run_ask
@@ -78,10 +80,24 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 app.include_router(whatsapp_router)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
+    logger.exception("Unhandled API error")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal rules engine error."},
+    )
 
 
 def get_state() -> AppState:
@@ -102,13 +118,23 @@ def ask_rules(
     if not query:
         raise HTTPException(status_code=400, detail="Query must not be empty.")
 
-    answer, cached, chunks = run_ask(
-        query,
-        retriever=state.retriever,
-        cache=state.cache,
-        arbiter=state.arbiter,
-        use_cache=body.use_cache,
-    )
+    try:
+        answer, cached, chunks = run_ask(
+            query,
+            retriever=state.retriever,
+            cache=state.cache,
+            arbiter=state.arbiter,
+            use_cache=body.use_cache,
+        )
+    except ClientError as exc:
+        logger.exception("Vertex/Gemini API error")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Rules engine temporarily unavailable (Vertex AI). "
+                "Try the Heresy example, which does not call the model."
+            ),
+        ) from exc
 
     return AskResponse(
         answer=answer,
