@@ -108,14 +108,20 @@ jobs:
 
       - name: Bootstrap Pulumi stack (Artifact Registry + index)
         working-directory: infra/pulumi
-        timeout-minutes: 5
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
           pulumi stack select "${{ env.PULUMI_STACK }}" --create
           pulumi config set gcp:project "${{ env.GCP_PROJECT_ID }}"
           pulumi config set gcp:region "${{ env.GCP_REGION }}"
-          pulumi refresh --yes
+
+      - name: Refresh Pulumi state (best-effort)
+        working-directory: infra/pulumi
+        timeout-minutes: 4
+        continue-on-error: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi refresh --yes
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
