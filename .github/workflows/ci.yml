@@ -108,6 +108,7 @@ jobs:
 
       - name: Bootstrap Pulumi stack (Artifact Registry + index)
         working-directory: infra/pulumi
+        timeout-minutes: 5
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
